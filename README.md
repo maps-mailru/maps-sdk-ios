@@ -71,20 +71,9 @@ mapView.setZoom(11, animated: true)
 Можно использовать набор из предоставляемых картинок или использовать свою собственную.
 
 ```swift
-let markerWithPredefinedPinImage = Marker(
-    id: "marker_id_1",
-    coords: Coordinates(lng: 33, lat: 55),
-    pin: .electricPin
-)
-
 let pinImage = UIImage(...) 
-let markerWithCustomImage = Marker(
-    id: "marker_id_2",
-    coords: Coordinates(lng: 33.3, lat: 55.5),
-    pin: .custom(pinImage)
-)
-mapView.addMarker(markerWithPredefinedPinImage)
-mapView.addMarker(markerWithCustomImage)
+mapView.addMarker(id: "marker_id_1", coords: Coordinates(lng: 33, lat: 55), image: .electricPin)
+mapView.addMarker(id: "marker_id_2", coords: Coordinates(lng: 33.3, lat: 55.5), image: .custom(pinImage))
 ```
 
 Удалить маркер нужно с указанием его идентификатора.
@@ -121,6 +110,18 @@ mapView.hidePopup(markerId: "marker_id_1")
 extension MyController: MapViewDelegate {
     func onMarkerSelect(id: String) {
         mapView.displayPopup(markerId: id, content: "Hello world")
+    }
+}
+```
+
+## Обработка ошибок
+
+Для обработки ошибок используется метод `didFail` делегата `MapViewDelegate`.
+
+```swift
+extension MyController: MapViewDelegate {
+    func didFail(_: MapView, withError: Error) {
+        print("Did fail with error: \(error.localizedDescription)")
     }
 }
 ```
