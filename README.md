@@ -35,9 +35,32 @@ override func viewDidLoad() {
 
 ```
 
-## SwiftUI
+## Управление картой
 
-*coming soon*
+
+Установка текущей координаты и направления пользователя
+
+```swift
+mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0)
+```
+
+Установка направления карты
+
+```swift
+mapView.setBearing(90, animated: true)
+```
+
+Установка координат центра карты
+
+```swift
+mapView.setCenter(Coordinates(lng: 33, lat: 55), animated: true)
+```
+
+Установка уровня зума
+
+```swift
+mapView.setZoom(11, animated: true)
+```
 
 ## Маркеры
 
@@ -101,3 +124,7 @@ extension MyController: MapViewDelegate {
     }
 }
 ```
+
+## SwiftUI
+
+*coming soon*
