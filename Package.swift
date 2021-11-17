@@ -15,8 +15,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "MapsSDK",
-            url: "https://mmr.jfrog.io/artifactory/maps-sdk-ios/1.0.25/MapsSDK.xcframework.zip",
-            checksum: "d3ee7e7328233af1dcf8e9e3d7632482aa10272faaa8a6c731a3f43121f3cb06"
+            url: "https://mmr.jfrog.io/artifactory/maps-sdk-ios/1.0.26/MapsSDK.xcframework.zip",
+            checksum: "31dfb54264933adf1d962e721835e5585e5871e04b0dd4061b44f3a272f231fb"
         )
     ]
 )
