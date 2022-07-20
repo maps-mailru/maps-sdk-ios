@@ -56,16 +56,23 @@ mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 
 mapView.setBearing(90, animated: true)
 ```
 
-Установка координат центра карты
+Установка координат центра карты (без зума и с зумом)
 
 ```swift
 mapView.setCenter(Coordinates(lng: 33, lat: 55), animated: true)
+mapView.setCenter(Coordinates(lng: 33, lat: 55), zoom: 10, animated: true)
 ```
 
 Установка уровня зума
 
 ```swift
 mapView.setZoom(11, animated: true)
+```
+
+Установка минимального и максимального уровня зума
+
+```swift
+mapView.setMinZoom(10, maxZoom: 15)
 ```
 
 Включение/выключение элементов управления
@@ -82,6 +89,19 @@ mapView.isMyLocationButtonHidden = true
 mapView.isDragPanEnabled = true
 mapView.isZoomRotateEnabled = true
 ```
+
+Установка режимов следования (followLocation, followBearingAndLocation, free)
+
+```swift
+mapView.mode = .followLocation
+```
+
+Вписать область во вьюпорт
+
+```swift
+mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
+```
+
 
 ## Маркеры
 
@@ -133,12 +153,12 @@ mapView.hidePopup(markerId: "marker_id_1")
 
 ## Показ попапа после выбора маркера на карте
 
-Для этого необходимо реализовать метод `mapView(_:, onMarkerSelectID:)` делегата `MapViewDelegate`.
+Для этого необходимо реализовать метод `mapView(_:, didSelectMarkerID:)` делегата `MapViewDelegate`.
 
 ```swift
 extension MyController: MapViewDelegate {
-    func mapView(_ mapView: MapView, onMarkerSelectID: String) {
-        mapView.displayPopup(markerId: id, content: "Hello world")
+    func mapView(_ mapView: MapView, didSelectMarkerID id: String) {
+        mapView.displayPopup(id: id, content: "Hello world")
     }
 }
 ```
@@ -154,31 +174,31 @@ mapView.changeStyle(.dark)
 
 ## GeoJSON
 
-Карта поддерживает отрисовку полигонов и линий из GeoJSON источника. ВАЖНО! Добавляйте источники и слои только после загрузки карты, которую можно отследить в методе делегата `mapViewDidLoad(_:)`
+Карта поддерживает отрисовку полигонов и линий из GeoJSON источника.
 
 ```swift
-func mapViewDidLoad(_ mapView: MapView) {
-    let sourceData = Data(...)
-    
-    let source = MapDataSource(id: "sourceID", type: .geoJSON(sourceData))
-    mapView.addSource(source)
-    
-    let fillLayer = MapLayer(
-        id: "fillLayer",
-        sourceID: "sourceID",
-        paint: FillPaintProperties(fillColor: .iuColor(.green), fillOpacity: 0.3)
-    )
+let sourceData = Data(...)
 
-    let strokeLayer = MapLayer(
-        id: "strokeLayer",
-        sourceID: "sourceID",
-        paint: LinePaintProperties()
-    )
-    
-    mapView.addLayer(fillLayer)
-    mapView.addLayer(strokeLayer)
-}
+let source = MapDataSource(id: "sourceID", type: .geoJSON(sourceData))
+mapView.addSource(source)
+
+let fillLayer = MapLayer(
+    id: "fillLayer",
+    sourceID: "sourceID",
+    paint: FillPaintProperties(fillColor: .iuColor(.green), fillOpacity: .value(0.3))
+)
+
+let strokeLayer = MapLayer(
+    id: "strokeLayer",
+    sourceID: "sourceID",
+    paint: LinePaintProperties()
+)
+
+mapView.addLayer(fillLayer)
+mapView.addLayer(strokeLayer)
 ```
+
+*Значение цвета и прозрачности можно задать в самом источнике. В таком случае используйте .source("field"), где "field" - имя поля в properties источника, откуда брать значение.*
 
 Удалить источники и слои можно с указанием их идентификаторов.
 
@@ -188,22 +208,43 @@ mapView.removeLayer("strokeLayer")
 mapView.removeSource("sourceID")
 ```
 
-Поддерживается отрисовка маршрутов в формате Isochrone.
+Поддерживается отрисовка маршрутов в формате кодированной строки сервиса построения маршрутов.
 
 ```swift
-func mapViewDidLoad(_ mapView: MapView) {
-    let routeSource = MapDataSource(id: "routeSourceID", type: .encodedString(encodedRoute))
-    mapView.addSource(routeSource)
+let routeSource = MapDataSource(id: "routeSourceID", type: .encodedString(encodedRoute))
+mapView.addSource(routeSource)
     
-    let routeLayer = MapLayer(
-        id: "routeLineLayer",
-        sourceID: "routeSourceID",
-        paint: LinePaintProperties(lineColor: .iuColor(.red), lineWidth: 2)
-    )
-    
-    mapView.addLayer(routeLayer)
-}
+let routeLayer = MapLayer(
+    id: "routeLineLayer",
+    sourceID: "routeSourceID",
+    paint: LinePaintProperties(lineColor: .iuColor(.red), lineWidth: 2)
+)
+
+mapView.addLayer(routeLayer)
 ```
+
+Поддерживается отрисовка кругов. Поскольку GeoJSON не поддерживает круги, они симулируются полигоном с заданным количеством сторон.
+
+```swift
+mapView.addCircleSource(center: coords, radius: 500, steps: 32, id: sourceID)
+```
+
+
+## Кластеризация
+
+Маркеры можно объединять в кластеры. Кластеризация создает новый источник данных на карте, поэтому использовать ее нужно только после загрузки карты. Вы можете указать радиус кластеров в метрах, цвет текста и фона.
+
+```swift
+let markers: [Marker] = ...
+mapView.addCluster(markers, id: "clusterId", radius: 50, textColor: .white, backgroundColor: .blue)
+```
+
+Удаление кластеров происходит с указанием идентификатора кластера.
+
+```swift
+mapView.removeCluster(id: "clusterId")
+```
+
 
 ## Обработка ошибок
 
