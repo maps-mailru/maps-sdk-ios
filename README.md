@@ -1,21 +1,47 @@
-# MapsSDK
-Библиотека карт для iOS
+# MapsSDK для iOS
+**MapsSDK** - библиотека, позволяющая использовать картографические данные и геосервисы VK в ваших iOS-приложениях. 
 
-## Подключение
+> Для использования MapsSDK вам необходим API-ключ. Подробнее о том, как его получить вы можете прочитать [по этой ссылке](https://platform.vk.com/docs/vkmaps/general-information/api-key)
 
-Подключение библиотеки осуществляется через `Swift Package Manager`. В Xcode выберите в меню `File -> Swift Packages -> Add Package Dependency` и введите в поле адреса репозитория `https://github.com/maps-mailru/maps-sdk-ios`.
+## Введение
 
-Выберите `MapsSDK` и добавьте его к цели вашего приложения.
+С помощью MapsSDK вы можете добавить в собственное приложение карты на основе геоданных VK. MapsSDK максимально упрощает процесс интеграции и отображения карт и берет на себя обработку жестов пользователя. Так же у вас есть возможность добавить на карту произвольные маркеры, полилинии и другие графические элементы, которые позволят пользователю получить дополнительную информацию и успешно взаимодействовать с картой.
+
+### Поддерживаемые платформы
+
+MapsSDK может быть интегрирован в приложения с поддержкой iOS 12.4 и более поздних версий.
+
+> Начиная с iPadOS 13 у пользователей появилась возможность использовать многооконный режим. MapsSDK не был оптимизирован для работы в это режиме и его использование может привести к неопределенному поведению.
+
+Вы можете с легкостью интегрировать MapsSDK в приложения, основанные на фреймворках UIKit или SwiftUI. Подробнее об этом будет рассказано далее.
+
+## Подключение MapsSDK
+
+Для подключения MapsSDK вы можете использовать Swift Package Manager.
+
+### Установка с помощью Swift Package Manager
+
+MapsSDK доступен в виде пакета для Swift Package Manager (SPM). SPM - это менеджер зависимостей, он интегрирован в систему сборки Swift и автоматизирует процесс загрузки, компиляции и линковки зависимостей.
+
+Для установки пакета выполните следующие действия:
+
+1. Откройте проект в Xcode.
+2. Нажмите `File -> Add Packages`.
+
+> Так же вы можете выбрать файл проекта на панели `Project Navigator`, перейти к настройкам проекта, далее выбрать вкладку `Package Dependencies` и нажать кнопку `Add Package Dependency`.
+
+3. В появившемся окне введите адрес репозитория - `https://github.com/maps-mailru/maps-sdk-ios`.
 
 ## Использование
 
 Импортируйте `MapsSDK` в файл, где вы будете использовать карту.
 
 Для начала работы с картой необходимо указать:
-* API key для работы с SDK
-* координаты центра карты
-* начальный уровень zoom-а
-* стиль тайлов
+
+- Ключ API для работы с SDK
+- координаты центра карты
+- начальный уровень zoom-а
+- стиль тайлов
 
 ```swift
 
@@ -105,36 +131,116 @@ mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
 
 ## Маркеры
 
-При создании маркера нужно указать его идентификатор, координату и картинку.
+Маркеры - это активные графические элементы, отображаемые на карте.
 
-Для картинки рекомендуется использовать изображение размером 48х48 пикселей.
-Картинка отображается на карте так, чтобы середина нижней грани картинки оказалось в заданной координате.
-Можно использовать набор из предоставляемых картинок или использовать свою собственную.
+### Создание маркера
+
+Для создания маркеров используется структура `Marker`. В инициализатор передаются уникальный идентификатор маркера, координату и картинку, а также, опционально, выравнивание.
 
 ```swift
-let pinImage = UIImage(...) 
-let marker1 = Marker(id: "marker_id_1", coords: Coordinates(lng: 33, lat: 55), pin: .electricPin)
-mapView.addMarker(marker1)
-let marker2 = Marker(id: "marker_id_2", coords: Coordinates(lng: 33, lat: 55), pin: .custom(pinImage))
-mapView.addMarker(marker2)
+let marker1 = Marker(id: "marker_id_1", 
+                    coords: Coordinates(lng: 33, lat: 55), 
+                    pin: .electricPin)
+                    
+let marker2 = Marker(id: "marker_id_2", 
+                     coords: Coordinates(lng: 33, lat: 55),
+                     pin: .electricInfo, 
+                     alignment: .bottomLeft)
+```
+В данном случае передаются картинки из предустановленного в SDK набора изображений. При необходимости вы можете передать собственную.
+
+```swift
+let markerImage = UIImage(...)
+let marker3 = Marker(id: "marker_id_3", 
+                     coords: Coordinates(lng: 33, lat: 55),
+                     pin: .custom(markerImage), 
+                     alignment: .center)
 ```
 
-Маркеры можно добавить массивом.
+По умолчанию выравнивание маркера имеет значение `.center`, то есть центр маркера совмещается с переданными координатами. Но у вас есть возможность гибко управлять этим параметров, выбирая одно из множества доступных значений, или передав произвольное смещение.
 
 ```swift
+// Выравнивание по центру нижней грани
+let marker4 = Marker(id: "marker_id_4", 
+                     coords: Coordinates(lng: 33, lat: 55),
+                     pin: .electricPhoto, 
+                     alignment: .bottom)
+                     
+// Выравнивание со смещением
+// Смещение высчитывается относительно центра маркера
+let marker5 = Marker(id: "marker_id_5", 
+                     coords: Coordinates(lng: 33, lat: 55),
+                     pin: .electricStar, 
+                     alignment: .center(offsetByX: 10, byY: -10)                   
+```
+
+### Размещение маркера на карте
+
+Для размещения маркера на карте используется метод `addMarker(_: Marker)`.
+
+```swift
+// Размещение маркеров по одному
+mapView.addMarker(marker1)
+mapView.addMarker(marker2)
+
+// Размещение нескольких маркеров
 mapView.addMarkers([marker1, marker2])
 ```
 
-Удалить маркер нужно с указанием его идентификатора.
+### Удаление маркера с карты
+
+Для удаления маркера используется метод `removeMarker(id: String)`, который принимает уникальный идентификатор маркера.
 
 ```swift
 mapView.removeMarker(id: "marker_id_1")
 ```
 
-Или удалить все маркеры сразу.
+Так же есть возможность удалить все маркеры сразу.
 
 ```swift
 mapView.removeAllMarkers()
+```
+
+### Отслеживание события нажатия на маркер
+
+Для отслеживания события нажатия на маркер необходимо использовать метод `MapViewDelegate.mapView(_: MapView, didSelectMarkerID: String)` делегата объекта карты, принимающий ID выбранного маркера. 
+
+```swift
+func MapDelegate: MapViewDelegate{
+    func mapView(_ map: MapView, didSelectMarkerID markerID: String) {
+        // ...
+        // markerID - ID выбранного маркера
+        // ...
+    }
+}
+```
+
+Дополнительно при нажатии на любой маркер вызывается метод `MapViewDelegate.mapView(_: MapView, didReceiveEvent: MapEvent)` делегата. В данном случае свойство `didReceiveEvent.type` меет значение `.clickOnMarker`.
+
+```swift
+func MapDelegate: MapViewDelegate{
+    func mapView(_ map: MapView, didReceiveEvent event: String) {
+        // ...
+        // Для события нажатия на маркер
+        // event.type = .clickOnMarker
+        // ...
+    }
+}
+```
+
+## Кластеры маркеров
+
+Маркеры можно объединять в кластеры. Кластеризация создает новый источник данных на карте. Вы можете указать радиус кластеров в метрах, цвет текста и фона.
+
+```swift
+let markers: [Marker] = ...
+mapView.addCluster(markers, id: "clusterId", radius: 50, textColor: .white, backgroundColor: .blue)
+```
+
+Удаление кластеров происходит с указанием идентификатора кластера.
+
+```swift
+mapView.removeCluster(id: "clusterId")
 ```
 
 ## Попапы
@@ -229,22 +335,15 @@ mapView.addLayer(routeLayer)
 mapView.addCircleSource(center: coords, radius: 500, steps: 32, id: sourceID)
 ```
 
+## Пробки и изолинии
 
-## Кластеризация
-
-Маркеры можно объединять в кластеры. Кластеризация создает новый источник данных на карте, поэтому использовать ее нужно только после загрузки карты. Вы можете указать радиус кластеров в метрах, цвет текста и фона.
-
-```swift
-let markers: [Marker] = ...
-mapView.addCluster(markers, id: "clusterId", radius: 50, textColor: .white, backgroundColor: .blue)
-```
-
-Удаление кластеров происходит с указанием идентификатора кластера.
+Карта может показывать пробки на дорогах и уровни высот (изолинии). Для включения воспользуйтесь методом `setLayoutVisible`.
 
 ```swift
-mapView.removeCluster(id: "clusterId")
+mapView.setLayoutVisible(true, layout: .traffic)
+mapView.setLayoutVisible(true, layout: .isolines)
+mapView.setLayoutVisible(true, layout: .isolinesLabel)
 ```
-
 
 ## Обработка ошибок
 
