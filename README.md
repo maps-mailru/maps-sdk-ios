@@ -32,76 +32,137 @@ MapsSDK доступен в виде пакета для Swift Package Manager (
 
 3. В появившемся окне введите адрес репозитория - `https://github.com/maps-mailru/maps-sdk-ios`.
 
-## Использование
+## Интеграция карт в приложение
 
 Импортируйте `MapsSDK` в файл, где вы будете использовать карту.
 
-Для начала работы с картой необходимо указать:
+```swift
+import MapsSDK
+```
 
-- Ключ API для работы с SDK
-- координаты центра карты
-- начальный уровень zoom-а
-- стиль тайлов
+Для начала работы необходимо:
+
+1. Создать объект типа `MapView`.
+2. Сконфигурировать карту.
+3. Указать делегат карты.
+
+### Создание объекта `MapView`
 
 ```swift
+let mapView = MapView()
+```
 
-import MapsSDK
+### Конфигурация объекта `MapView`
 
-...
+Для конфигурации необходимо создать объект типа `MapViewConfig`, содержащий следующие сведения:
 
+- Ключ API для работы с SDK;
+- координаты центра карты;
+- начальный уровень zoom-а;
+- стиль тайлов.
+
+Далее конфигурацию необходимо передать в объект карты.
+
+```swift
+let mapConfig = MapViewConfig(
+    apiKey: "##YOUR_API_KEY##",
+    center: Coordinates(lng: 33, lat: 55),
+    zoomLevel: 11,
+    style: .automatic
+
+mapView.setup(mapConfig)
+)
+```
+Уровень зума (`zoomLevel`) может иметь значение от 0 (самый отдаленный) до 22 (самый приближенный).
+
+Стиль тайлов (`style`) может принять одно из следующих значений:
+
+- `.automatic` - автоматический выбор стиля в зависимости от текущих настроек карты;
+- `.main` - базовый стиль;
+- `.light` - светлый стиль;
+- `.dark` - темный стиль;
+- `.navMain` - базовый стиль для навигации с акцентом на дороги;
+- `.navDark` - темный стиль для навигации с акцентом на дороги.
+
+### Указание делегата карты
+
+Делегат должен реализовывать требования протокола `MapViewDelegate`. Он будет использоваться для обработки оповещений от карты о различных событиях, таких как:
+
+- Карта была загружена;
+- Было получено событие, иницированное пользователем (например касание).
+- Было получено событие, инициированное элементами управления картой.
+
+и другие. 
+
+Все доступные события будут рассмотрены далее в руководстве.
+
+### Пример интеграции карты в приложение
+
+```swift
 override func viewDidLoad() {
+    let mapView = MapView()
+    
     let mapConfig = MapViewConfig(
         apiKey: "##YOUR_API_KEY##",
         center: Coordinates(lng: 33, lat: 55),
         zoomLevel: 11,
         style: .automatic
     )
-    let mapView = MapView()
-    mapView.delegate = self
     mapView.setup(mapConfig)
-    view.addSubview(mapView)
     
-    mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 0)
+    mapView.delegate = self
+    
+    view.addSubview(mapView)
 }
-
-
 ```
 
-## Управление картой
+## Использование и управление картой
 
+### Установка текущих параметров пользователя
 
-Установка текущей координаты и направления пользователя
+Метод `MapView.setCurrentLocation` устанавливает:
+
+- текущие координаты пользователя;
+- направление, в котором смотрит или движется пользователь (`bearing`);
+- точность позиции пользователя в метрах (`accuracy`);
+- уровень зума (`zoom`). Данный аргумент является опциональным.
 
 ```swift
+// без установки зума
 mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 0)
+
+// с установкой зума
+mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 0, zoom: 10)
 ```
 
-Установка направления карты
+Уровень зума (`zoom`) может изменяться в диапазоне от 0 (самый отдаленный) до 22 (самый приближенный).
+
+###Установка направления карты
 
 ```swift
 mapView.setBearing(90, animated: true)
 ```
 
-Установка координат центра карты (без зума и с зумом)
+###Установка координат центра карты (без зума и с зумом)
 
 ```swift
 mapView.setCenter(Coordinates(lng: 33, lat: 55), animated: true)
 mapView.setCenter(Coordinates(lng: 33, lat: 55), zoom: 10, animated: true)
 ```
 
-Установка уровня зума
+###Установка уровня зума
 
 ```swift
 mapView.setZoom(11, animated: true)
 ```
 
-Установка минимального и максимального уровня зума
+###Установка минимального и максимального уровня зума
 
 ```swift
 mapView.setMinZoom(10, maxZoom: 15)
 ```
 
-Включение/выключение элементов управления
+###Включение/выключение элементов управления
 
 ```swift
 mapView.isZoomButtonsHidden = true
@@ -109,25 +170,24 @@ mapView.isCompassHidden = true
 mapView.isMyLocationButtonHidden = true
 ```
 
-Включение/выключение жестов
+###Включение/выключение жестов
 
 ```swift
 mapView.isDragPanEnabled = true
 mapView.isZoomRotateEnabled = true
 ```
 
-Установка режимов следования (followLocation, followBearingAndLocation, free)
+###Установка режимов следования (followLocation, followBearingAndLocation, free)
 
 ```swift
 mapView.mode = .followLocation
 ```
 
-Вписать область во вьюпорт
+###Вписать область во вьюпорт
 
 ```swift
 mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
 ```
-
 
 ## Маркеры
 
