@@ -137,32 +137,32 @@ mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 
 
 Уровень зума (`zoom`) может изменяться в диапазоне от 0 (самый отдаленный) до 22 (самый приближенный).
 
-###Установка направления карты
+### Установка направления карты
 
 ```swift
 mapView.setBearing(90, animated: true)
 ```
 
-###Установка координат центра карты (без зума и с зумом)
+### Установка координат центра карты (без зума и с зумом)
 
 ```swift
 mapView.setCenter(Coordinates(lng: 33, lat: 55), animated: true)
 mapView.setCenter(Coordinates(lng: 33, lat: 55), zoom: 10, animated: true)
 ```
 
-###Установка уровня зума
+### Установка уровня зума
 
 ```swift
 mapView.setZoom(11, animated: true)
 ```
 
-###Установка минимального и максимального уровня зума
+### Установка минимального и максимального уровня зума
 
 ```swift
 mapView.setMinZoom(10, maxZoom: 15)
 ```
 
-###Включение/выключение элементов управления
+### Включение/выключение элементов управления
 
 ```swift
 mapView.isZoomButtonsHidden = true
@@ -170,20 +170,20 @@ mapView.isCompassHidden = true
 mapView.isMyLocationButtonHidden = true
 ```
 
-###Включение/выключение жестов
+### Включение/выключение жестов
 
 ```swift
 mapView.isDragPanEnabled = true
 mapView.isZoomRotateEnabled = true
 ```
 
-###Установка режимов следования (followLocation, followBearingAndLocation, free)
+### Установка режимов следования (followLocation, followBearingAndLocation, free)
 
 ```swift
 mapView.mode = .followLocation
 ```
 
-###Вписать область во вьюпорт
+### Вписать область во вьюпорт
 
 ```swift
 mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
