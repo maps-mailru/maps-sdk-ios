@@ -189,6 +189,15 @@ mapView.mode = .followLocation
 mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
 ```
 
+### Выравнивание логотипа
+
+По умолчанию логотип отображается в нижнем правом углу карты и учитывает `safeArea`.
+
+```swift
+mapView.logoAlignment = .bottomRight
+mapView.logoIgnoresSafeArea = false
+```
+
 ## Маркеры
 
 Маркеры - это активные графические элементы, отображаемые на карте.
