@@ -196,6 +196,7 @@ mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
 ```swift
 mapView.logoAlignment = .bottomRight
 mapView.logoIgnoresSafeArea = false
+mapView.logoInsets = .zero
 ```
 
 ## Маркеры
