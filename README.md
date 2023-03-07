@@ -137,20 +137,50 @@ mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 
 
 Уровень зума (`zoom`) может изменяться в диапазоне от 0 (самый отдаленный) до 22 (самый приближенный).
 
-### Установка направления карты
+### Управление камерой
+
+Для управления камерой используется метод `flyTo`, а так же `setBearing` и `setZoom`.
+
+#### Метод `flyTo`
+
+Позволяет изменить координаты центра карты. За анимацию изменений отвечает аргумент `animated`, а за длительность - `duration`. 
+
+```swift
+// без указания длительности анимации
+mapView.flyTo(Coordinates(lng: 33, lat: 55), animated: true)
+// с указание длительности анимации
+mapView.flyTo(Coordinates(lng: 33, lat: 55), animated: true, duration: 2)
+```
+Дополнительно вы можете передать аргумент `options` типа `MapCameraOptions`, определяющий:
+
+- азимут (`bearing`) - угол поворота карты;
+- зум (`zoom`) - уровень зума карты;
+- отступы (`padding`) - отступы с каждой стороны окна для смещения центральной точки вьюпорта;
+- кривую движения камеры (`curve`) - коэфициент для определения траектории движения камеры;
+- флаг сброса режима следования (`resetFollowMode`) - см. раздел "Установка режимов следования".
+
+Каждый из перечисленных параметров является опциональным.
+
+```swift
+let options = MapCameraOptions(bearing: 180,
+                zoom: 12,
+                padding: UIEdgeInsets.init(top: 20, left: 20, bottom: 150, right: 20),
+                curve: 1.42,
+                resetFollowMode: false)
+mapView.flyTo(Coordinates(lng: 33, lat: 55), options: options, animated: true)
+```
+
+#### Метод `setBearing`
+
+Устанавливает направление карты, является облегченной версией метода `flyTo`.
 
 ```swift
 mapView.setBearing(90, animated: true)
 ```
 
-### Установка координат центра карты (без зума и с зумом)
+#### Метод `setZoom`
 
-```swift
-mapView.setCenter(Coordinates(lng: 33, lat: 55), animated: true)
-mapView.setCenter(Coordinates(lng: 33, lat: 55), zoom: 10, animated: true)
-```
-
-### Установка уровня зума
+Устанавливает зум карты, является облегченной версией метода `flyTo`.
 
 ```swift
 mapView.setZoom(11, animated: true)
