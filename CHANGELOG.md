@@ -1,3 +1,21 @@
+## 1.0.124
+
+### Новое
+
+- Рисование пунктирных линий. В `LinePaintProperties` добавлено поле `dashes` для возможности задать величину пунктира и разрыва.
+
+```swift
+let strokeLayer = MapLayer(
+    id: layerID + "stroke",
+    sourceID: sourceID,
+    paint: LinePaintProperties(
+        lineColor: .iuColor(.blue),
+        lineWidth: 2,
+        lineOpacity: .value(0.5),
+        dashes: LineDashes(dash: 5, gap: 2)
+    )
+```
+
 ## 1.0.123
 
 ### Изменения
