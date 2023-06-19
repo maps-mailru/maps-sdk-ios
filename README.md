@@ -435,6 +435,21 @@ mapView.addLayer(routeLayer)
 mapView.addCircleSource(center: coords, radius: 500, steps: 32, id: sourceID)
 ```
 
+Если источники(sources) и слои(layers) известны заранее, то вы можете добавить их единым вызовом.
+```swift
+mapView.addSourcesAndLayers(
+    sources: [
+        source,
+        routeSource
+    ],
+    layers: [
+        fillLayer,
+        strokeLayer,
+        routeLayer
+    ]
+)
+```
+
 ## Пробки и изолинии
 
 Карта может показывать пробки на дорогах и уровни высот (изолинии). Для включения воспользуйтесь методом `setLayoutVisible`.

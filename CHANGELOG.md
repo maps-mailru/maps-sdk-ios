@@ -1,3 +1,54 @@
+## 1.0.134
+
+### Новое
+
+- Добавлен метод `addSourcesAndLayers`, позволяющий добавить все известные заранее источники и слои одним вызовом.
+```swift
+let sourceData = Data(...)
+
+let source = MapDataSource(id: "sourceID", type: .geoJSON(sourceData))
+mapView.addSource(source)
+
+let fillLayer = MapLayer(
+    id: "fillLayer",
+    sourceID: "sourceID",
+    paint: FillPaintProperties(fillColor: .iuColor(.green), fillOpacity: .value(0.3))
+)
+
+let strokeLayer = MapLayer(
+    id: "strokeLayer",
+    sourceID: "sourceID",
+    paint: LinePaintProperties()
+)
+
+let encodedRoute: String = ...
+let routeSource = MapDataSource(id: "routeSourceID", type: .encodedString(encodedRoute))
+
+let routeLayer = MapLayer(
+    id: "routeLineLayer",
+    sourceID: "routeSourceID",
+    paint: LinePaintProperties(lineColor: .iuColor(.red), lineWidth: 2)
+)
+
+mapView.addSourcesAndLayers(
+    sources: [
+        source,
+        routeSource
+    ],
+    layers: [
+        fillLayer,
+        strokeLayer,
+        routeLayer
+    ]
+)
+```
+
+## 1.0.128-1.0.133
+
+### Изменения
+
+- мелкие улучшения и исправления
+
 ## 1.0.127
 
 ### Новое
