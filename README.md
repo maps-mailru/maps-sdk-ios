@@ -452,12 +452,13 @@ mapView.addSourcesAndLayers(
 
 ## Пробки и изолинии
 
-Карта может показывать пробки на дорогах и уровни высот (изолинии). Для включения воспользуйтесь методом `setLayoutVisible`.
+Карта может показывать пробки на дорогах, линии метро и уровни высот (изолинии). Для включения воспользуйтесь методом `setLayoutVisible`.
 
 ```swift
 mapView.setLayoutVisible(true, layout: .traffic)
 mapView.setLayoutVisible(true, layout: .isolines)
 mapView.setLayoutVisible(true, layout: .isolinesLabel)
+mapView.setLayoutVisible(true, layout: .subway)
 ```
 
 ## Обработка ошибок

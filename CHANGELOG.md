@@ -1,3 +1,17 @@
+## 1.0.135
+
+### Новое
+
+- Добавлена возможность управлять отображением линий метро на карте.
+```swift
+// Включить линии метро
+mapView.setLayoutVisible(true, layout: .subway)
+
+// Выключить линии метро
+mapView.setLayoutVisible(false, layout: .subway)
+```
+
+
 ## 1.0.134
 
 ### Новое
