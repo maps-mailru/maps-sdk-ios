@@ -1,5 +1,6 @@
 # MapsSDK для iOS
-**MapsSDK** - библиотека, позволяющая использовать картографические данные и геосервисы VK в ваших iOS-приложениях. 
+
+**MapsSDK** - библиотека, позволяющая использовать картографические данные и геосервисы VK в ваших iOS-приложениях.
 
 > Для использования MapsSDK вам необходим API-ключ. Подробнее о том, как его получить вы можете прочитать [по этой ссылке](https://platform.vk.com/docs/vkmaps/general-information/api-key)
 
@@ -7,15 +8,7 @@
 
 С помощью MapsSDK вы можете добавить в собственное приложение карты на основе геоданных VK. MapsSDK максимально упрощает процесс интеграции и отображения карт и берет на себя обработку жестов пользователя. Так же у вас есть возможность добавить на карту произвольные маркеры, полилинии и другие графические элементы, которые позволят пользователю получить дополнительную информацию и успешно взаимодействовать с картой.
 
-### Поддерживаемые платформы
-
-MapsSDK может быть интегрирован в приложения с поддержкой iOS 12.4 и более поздних версий.
-
-> Начиная с iPadOS 13 у пользователей появилась возможность использовать многооконный режим. MapsSDK не был оптимизирован для работы в это режиме и его использование может привести к неопределенному поведению.
-
-Вы можете с легкостью интегрировать MapsSDK в приложения, основанные на фреймворках UIKit или SwiftUI. Подробнее об этом будет рассказано далее.
-
-## Подключение MapsSDK
+## Подключение
 
 Для подключения MapsSDK вы можете использовать Swift Package Manager.
 
@@ -32,15 +25,16 @@ MapsSDK доступен в виде пакета для Swift Package Manager (
 
 3. В появившемся окне введите адрес репозитория - `https://github.com/maps-mailru/maps-sdk-ios`.
 
+
 ## Интеграция карт в приложение
 
-Импортируйте `MapsSDK` в файл, где вы будете использовать карту.
+Импортируйте `MapsSDK` в файл, в котором вы будете использовать карту.
 
 ```swift
 import MapsSDK
 ```
 
-Для начала работы необходимо:
+Для начала работы с картой необходимо:
 
 1. Создать объект типа `MapView`.
 2. Сконфигурировать карту.
@@ -56,62 +50,63 @@ let mapView = MapView()
 
 Для конфигурации необходимо создать объект типа `MapViewConfig`, содержащий следующие сведения:
 
-- Ключ API для работы с SDK;
-- координаты центра карты;
-- начальный уровень zoom-а;
-- стиль тайлов.
+* [`API-ключ`](https://platform.vk.com/docs/vkmaps/general-information/api-key) для работы с SDK;
+* координаты центра карты;
+* начальный уровень `zoom`;
+* стиль тайлов.
 
-Далее конфигурацию необходимо передать в объект карты.
-
+#### Пример настройки и установки конфигурации
 ```swift
 let mapConfig = MapViewConfig(
-    apiKey: "##YOUR_API_KEY##",
+    apiKey: "##API_KEY##",
     center: Coordinates(lng: 33, lat: 55),
     zoomLevel: 11,
     style: .automatic
-
-mapView.setup(mapConfig)
 )
-```
-Уровень зума (`zoomLevel`) может иметь значение от 0 (самый отдаленный) до 22 (самый приближенный).
+mapView.setup(mapConfig)
 
+```
+
+Уровень зума (`zoomLevel`) может иметь значение от 0 (самый отдаленный) до 22 (самый приближенный).
 Стиль тайлов (`style`) может принять одно из следующих значений:
 
-- `.automatic` - автоматический выбор стиля в зависимости от текущих настроек карты;
-- `.main` - базовый стиль;
-- `.light` - светлый стиль;
-- `.dark` - темный стиль;
-- `.navMain` - базовый стиль для навигации с акцентом на дороги;
-- `.navDark` - темный стиль для навигации с акцентом на дороги.
+* `.automatic` - автоматический выбор стиля в зависимости от `isDriveMode` и текущей цветовой схемы устройства;
+* `.main` - базовый стиль;
+* `.light` - светлый стиль;
+* `.dark` - темный стиль;
+* `.navMain` - базовый стиль для навигации с акцентом на дороги;
+* `.navDark` - темный стиль для навигации с акцентом на дороги.
+
 
 ### Указание делегата карты
 
 Делегат должен реализовывать требования протокола `MapViewDelegate`. Он будет использоваться для обработки оповещений от карты о различных событиях, таких как:
 
-- Карта была загружена;
-- Было получено событие, иницированное пользователем (например касание).
-- Было получено событие, инициированное элементами управления картой.
+* Карта была загружена;
+* было получено событие, иницированное пользователем (например касание);
+* было получено событие, инициированное элементами управления картой
 
-и другие. 
+и другие.
 
-Все доступные события будут рассмотрены далее в руководстве.
 
 ### Пример интеграции карты в приложение
-
 ```swift
+import MapsSDK
+
+...
+
 override func viewDidLoad() {
     let mapView = MapView()
     
     let mapConfig = MapViewConfig(
-        apiKey: "##YOUR_API_KEY##",
+        apiKey: "##API_KEY##",
         center: Coordinates(lng: 33, lat: 55),
         zoomLevel: 11,
         style: .automatic
     )
+
     mapView.setup(mapConfig)
-    
     mapView.delegate = self
-    
     view.addSubview(mapView)
 }
 ```
@@ -120,30 +115,30 @@ override func viewDidLoad() {
 
 ### Установка текущих параметров пользователя
 
-Метод `MapView.setCurrentLocation` устанавливает:
+Метод `setCurrentLocation` устанавливает:
 
-- текущие координаты пользователя;
-- направление, в котором смотрит или движется пользователь (`bearing`);
-- точность позиции пользователя в метрах (`accuracy`);
-- уровень зума (`zoom`). Данный аргумент является опциональным.
+* Текущие координаты пользователя;
+* направление, в котором смотрит или движется пользователь (`bearing`);
+* точность позиции пользователя в метрах (`accuracy`);
+* уровень зума (`zoom`). Данный аргумент является опциональным.
 
+
+#### Установка текущей координаты и направления пользователя
 ```swift
 // без установки зума
 mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 0)
-
 // с установкой зума
 mapView.setCurrentLocation(Coordinates(lng: 33, lat: 55), bearing: 0, accuracy: 0, zoom: 10)
 ```
-
 Уровень зума (`zoom`) может изменяться в диапазоне от 0 (самый отдаленный) до 22 (самый приближенный).
 
 ### Управление камерой
-
 Для управления камерой используется метод `flyTo`, а так же `setBearing` и `setZoom`.
 
 #### Метод `flyTo`
 
-Позволяет изменить координаты центра карты. За анимацию изменений отвечает аргумент `animated`, а за длительность - `duration`. 
+
+Позволяет изменить координаты центра карты. За анимацию изменений отвечает аргумент `animated`, а за длительность - `duration`.
 
 ```swift
 // без указания длительности анимации
@@ -151,16 +146,19 @@ mapView.flyTo(Coordinates(lng: 33, lat: 55), animated: true)
 // с указание длительности анимации
 mapView.flyTo(Coordinates(lng: 33, lat: 55), animated: true, duration: 2)
 ```
+
 Дополнительно вы можете передать аргумент `options` типа `MapCameraOptions`, определяющий:
 
-- азимут (`bearing`) - угол поворота карты;
-- зум (`zoom`) - уровень зума карты;
-- отступы (`padding`) - отступы с каждой стороны окна для смещения центральной точки вьюпорта;
-- кривую движения камеры (`curve`) - коэфициент для определения траектории движения камеры;
-- флаг сброса режима следования (`resetFollowMode`) - см. раздел "Установка режимов следования".
+* Азимут (`bearing`) - угол поворота карты;
+* зум (`zoom`) - уровень зума карты;
+* отступы (`padding`) - отступы с каждой стороны окна для смещения центральной точки вьюпорта;
+* кривую движения камеры (`curve`) - коэфициент для определения траектории движения камеры;
+* флаг сброса режима следования (`resetFollowMode`) - см. раздел "Установка режимов следования".
+
 
 Каждый из перечисленных параметров является опциональным.
 
+#### Пример метода `flyTo` с дополнительными опциями `MapCameraOptions`
 ```swift
 let options = MapCameraOptions(bearing: 180,
                 zoom: 12,
@@ -170,73 +168,68 @@ let options = MapCameraOptions(bearing: 180,
 mapView.flyTo(Coordinates(lng: 33, lat: 55), options: options, animated: true)
 ```
 
-#### Метод `setBearing`
-
-Устанавливает направление карты, является облегченной версией метода `flyTo`.
-
+#### Установка направления карты
+Метод `setBearing` устанавливает направление карты, является облегченной версией метода `flyTo`.
 ```swift
 mapView.setBearing(90, animated: true)
 ```
 
-#### Метод `setZoom`
 
-Устанавливает зум карты, является облегченной версией метода `flyTo`.
+#### Установка уровня зума
+Метод `setZoom` устанавливает зум карты, является облегченной версией метода `flyTo`.
 
 ```swift
 mapView.setZoom(11, animated: true)
 ```
 
-### Установка минимального и максимального уровня зума
+#### Установка режимов следования (`followLocation`, `followBearingAndLocation`, `free`)
+```swift
+mapView.mode = .followLocation
+```
+
+#### Вписывание области во вьюпорт
+```swift
+mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
+```
+
+### Дополнительные возможности карты
+
+#### Установка минимального и максимального уровня зума
 
 ```swift
 mapView.setMinZoom(10, maxZoom: 15)
 ```
 
-### Включение/выключение элементов управления
-
+#### Включение и выключение элементов управления
 ```swift
 mapView.isZoomButtonsHidden = true
 mapView.isCompassHidden = true
 mapView.isMyLocationButtonHidden = true
 ```
 
-### Включение/выключение жестов
-
+#### Включение и выключение жестов
 ```swift
 mapView.isDragPanEnabled = true
 mapView.isZoomRotateEnabled = true
 ```
 
-### Установка режимов следования (followLocation, followBearingAndLocation, free)
 
-```swift
-mapView.mode = .followLocation
-```
 
-### Вписать область во вьюпорт
-
-```swift
-mapView.fitBounds(northWest: coords1, southEast: coords2, animated: true)
-```
-
-### Выравнивание логотипа
-
-По умолчанию логотип отображается в нижнем правом углу карты и учитывает `safeArea`.
-
+#### Выравнивание логотипа
 ```swift
 mapView.logoAlignment = .bottomRight
 mapView.logoIgnoresSafeArea = false
 mapView.logoInsets = .zero
 ```
+По умолчанию логотип отображается в нижнем правом углу карты и учитывает `safeArea`.
 
 ## Маркеры
 
-Маркеры - это активные графические элементы, отображаемые на карте.
-
-### Создание маркера
-
 Для создания маркеров используется структура `Marker`. В инициализатор передаются уникальный идентификатор маркера, координату и картинку, а также, опционально, выравнивание.
 
+Для картинки рекомендуется использовать изображение размером 48х48 пикселей. Можно использовать набор из предоставляемых картинок или использовать свою собственную.
+
+#### Добавление отдельных маркеров
 ```swift
 let marker1 = Marker(id: "marker_id_1", 
                     coords: Coordinates(lng: 33, lat: 55), 
@@ -248,7 +241,6 @@ let marker2 = Marker(id: "marker_id_2",
                      alignment: .bottomLeft)
 ```
 В данном случае передаются картинки из предустановленного в SDK набора изображений. При необходимости вы можете передать собственную.
-
 ```swift
 let markerImage = UIImage(...)
 let marker3 = Marker(id: "marker_id_3", 
@@ -257,7 +249,7 @@ let marker3 = Marker(id: "marker_id_3",
                      alignment: .center)
 ```
 
-По умолчанию выравнивание маркера имеет значение `.center`, то есть центр маркера совмещается с переданными координатами. Но у вас есть возможность гибко управлять этим параметров, выбирая одно из множества доступных значений, или передав произвольное смещение.
+По умолчанию выравнивание маркера имеет значение `.center`, то есть центр маркера совмещается с переданными координатами. У вас есть возможность гибко управлять этим параметром, выбирая одно из множества доступных значений, или передать произвольное смещение.
 
 ```swift
 // Выравнивание по центру нижней грани
@@ -271,39 +263,34 @@ let marker4 = Marker(id: "marker_id_4",
 let marker5 = Marker(id: "marker_id_5", 
                      coords: Coordinates(lng: 33, lat: 55),
                      pin: .electricStar, 
-                     alignment: .center(offsetByX: 10, byY: -10)                   
+                     alignment: .center(offsetByX: 10, byY: -10))
 ```
 
-### Размещение маркера на карте
 
 Для размещения маркера на карте используется метод `addMarker(_: Marker)`.
 
+#### Добавление маркеров по одному
 ```swift
-// Размещение маркеров по одному
 mapView.addMarker(marker1)
 mapView.addMarker(marker2)
+```
 
-// Размещение нескольких маркеров
+#### Добавление маркеров массивом
+```swift
 mapView.addMarkers([marker1, marker2])
 ```
 
-### Удаление маркера с карты
-
-Для удаления маркера используется метод `removeMarker(id: String)`, который принимает уникальный идентификатор маркера.
-
+#### Удаление отдельного маркера с указанием его идентификатора
 ```swift
 mapView.removeMarker(id: "marker_id_1")
 ```
 
-Так же есть возможность удалить все маркеры сразу.
-
+#### Удаление всех маркеров
 ```swift
 mapView.removeAllMarkers()
 ```
 
-### Отслеживание события нажатия на маркер
-
-Для отслеживания события нажатия на маркер необходимо использовать метод `MapViewDelegate.mapView(_: MapView, didSelectMarkerID: String)` делегата объекта карты, принимающий ID выбранного маркера. 
+#### Отслеживание события нажатия на маркер
 
 ```swift
 func MapDelegate: MapViewDelegate{
@@ -314,8 +301,7 @@ func MapDelegate: MapViewDelegate{
     }
 }
 ```
-
-Дополнительно при нажатии на любой маркер вызывается метод `MapViewDelegate.mapView(_: MapView, didReceiveEvent: MapEvent)` делегата. В данном случае свойство `didReceiveEvent.type` меет значение `.clickOnMarker`.
+Дополнительно при нажатии на любой маркер вызывается метод `MapViewDelegate.mapView(_: MapView, didReceiveEvent: MapEvent)` делегата. В данном случае свойство `didReceiveEvent.type` имеет значение `.clickOnMarker`.
 
 ```swift
 func MapDelegate: MapViewDelegate{
@@ -328,20 +314,22 @@ func MapDelegate: MapViewDelegate{
 }
 ```
 
-## Кластеры маркеров
+
+## Кластеризация
 
 Маркеры можно объединять в кластеры. Кластеризация создает новый источник данных на карте. Вы можете указать радиус кластеров в метрах, цвет текста и фона.
-
 ```swift
-let markers: [Marker] = ...
-mapView.addCluster(markers, id: "clusterId", radius: 50, textColor: .white, backgroundColor: .blue)
+func mapViewDidLoad(_ mapView: MapView) {
+    let markers: [Marker] = ...
+    mapView.addCluster(markers, id: "clusterId", radius: 50, textColor: .white, backgroundColor: .blue)
+}
 ```
 
 Удаление кластеров происходит с указанием идентификатора кластера.
-
 ```swift
 mapView.removeCluster(id: "clusterId")
 ```
+
 
 ## Попапы
 
@@ -357,9 +345,7 @@ mapView.displayPopup(markerId: "marker_id_1", content: "Hello world")
 mapView.hidePopup(markerId: "marker_id_1")
 ```
 
-## Показ попапа после выбора маркера на карте
-
-Для этого необходимо реализовать метод `mapView(_:, didSelectMarkerID:)` делегата `MapViewDelegate`.
+Для показа попапа после выбора маркера на карте необходимо реализовать метод `mapView(_:, didSelectMarkerID:)` делегата `MapViewDelegate`.
 
 ```swift
 extension MyController: MapViewDelegate {
@@ -372,7 +358,6 @@ extension MyController: MapViewDelegate {
 ## Стили
 
 Карта поддерживает смену стилей. Стиль `.automatic` означает, что карта будет автоматически менять светлый и темный стили в зависимости от настройки системной темы интерфейса.
-
 ```swift
 mapView.changeStyle(.automatic)
 mapView.changeStyle(.dark)
@@ -382,6 +367,7 @@ mapView.changeStyle(.dark)
 
 Карта поддерживает отрисовку полигонов и линий из GeoJSON источника.
 
+#### Добавление источника данных и отрисовка слоёв
 ```swift
 let sourceData = Data(...)
 
@@ -404,7 +390,7 @@ mapView.addLayer(fillLayer)
 mapView.addLayer(strokeLayer)
 ```
 
-*Значение цвета и прозрачности можно задать в самом источнике. В таком случае используйте .source("field"), где "field" - имя поля в properties источника, откуда брать значение.*
+Значение цвета и прозрачности можно задать в самом источнике. В таком случае используйте `.source("field")`, где `field` — имя поля в `properties` источника, из которого нужно брать значение.
 
 Удалить источники и слои можно с указанием их идентификаторов.
 
@@ -414,12 +400,12 @@ mapView.removeLayer("strokeLayer")
 mapView.removeSource("sourceID")
 ```
 
-Поддерживается отрисовка маршрутов в формате кодированной строки сервиса построения маршрутов.
+Поддерживается отрисовка маршрутов в формате кодированной строки из сервиса [Построение маршрута](https://platform.vk.com/docs/vkmaps/routing/directions).
 
 ```swift
 let routeSource = MapDataSource(id: "routeSourceID", type: .encodedString(encodedRoute))
 mapView.addSource(routeSource)
-    
+
 let routeLayer = MapLayer(
     id: "routeLineLayer",
     sourceID: "routeSourceID",
@@ -434,7 +420,6 @@ mapView.addLayer(routeLayer)
 ```swift
 mapView.addCircleSource(center: coords, radius: 500, steps: 32, id: sourceID)
 ```
-
 Если источники(sources) и слои(layers) известны заранее, то вы можете добавить их единым вызовом.
 ```swift
 mapView.addSourcesAndLayers(
@@ -464,7 +449,6 @@ mapView.setLayoutVisible(true, layout: .subway)
 ## Обработка ошибок
 
 Для обработки ошибок используется метод `mapView(_:, didFailWithError:)` делегата `MapViewDelegate`.
-
 ```swift
 extension MyController: MapViewDelegate {
     func mapView(_ mapView: MapView, didFailWithError error: Error) {
@@ -473,12 +457,12 @@ extension MyController: MapViewDelegate {
 }
 ```
 
-## Geocoder
+## Геокодирование
 
-Geocoder - компонент MapsSDK для прямого и обратного геокодирования. Для инициализации необходим API key.
+`Geocoder` — компонент `MapsSDK` для прямого и обратного геокодирования. Для инициализации необходим [`API_KEY`](https://platform.vk.com/docs/vkmaps/general-information/api-key).
 
+#### Пример прямого геокодирования
 ```swift
-
 let geocoder = Geocoder(apiKey: "your apiKey")
 
 geocoder.geocode(
@@ -492,15 +476,15 @@ geocoder.geocode(
     case let .failure(error):
         print(error.localizedDescription)
     }
-
+}
 ```
 
 ## SwiftUI
 
-Для использования карты в SwiftUI есть компонент `Map`.
+Для использования карты в `SwiftUI` предусмотрен компонент `Map`.
 
+#### Пример использования в SwiftUI
 ```swift
-
 import SwiftUI
 import MapsSDK
 
@@ -511,7 +495,7 @@ class StateObject: ObservableObject {
         zoomLevel: 15,
         style: .automatic
     )
-    
+
     let mapView = MapView()
 }
 
@@ -521,7 +505,7 @@ extension StateObject: MapViewDelegate {
 
 struct ContentView: View {
     @StateObject private var state = StateObject()
-    
+
     var body: some View {
         Map(
             config: state.mapConfig,
@@ -530,5 +514,11 @@ struct ContentView: View {
         )
     }
 }
-
 ```
+## Ограничения
+
+`MapsSDK` может быть интегрирован в приложения с поддержкой iOS 12.4 и более поздних версий.
+
+Начиная с iPadOS 13 у пользователей появилась возможность использовать многооконный режим. `MapsSDK` не был оптимизирован для работы в этом режиме.
+
+Вы можете с легкостью интегрировать MapsSDK в приложения, основанные на фреймворках UIKit или SwiftUI. 
