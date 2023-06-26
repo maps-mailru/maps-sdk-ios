@@ -174,6 +174,13 @@ mapView.flyTo(Coordinates(lng: 33, lat: 55), options: options, animated: true)
 mapView.setBearing(90, animated: true)
 ```
 
+#### Фиксация севера карты сверху
+
+Свойство `isNorthAlwaysUp` запрещает вращать карту любым способом, если установлдено в `true`. Север будет всегда сверху карты. По умолчанию `false`.
+
+```swift
+mapView.isNorthAlwaysUp = true
+```
 
 #### Установка уровня зума
 Метод `setZoom` устанавливает зум карты, является облегченной версией метода `flyTo`.
