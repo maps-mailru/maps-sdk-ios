@@ -422,6 +422,43 @@ let routeLayer = MapLayer(
 mapView.addLayer(routeLayer)
 ```
 
+Поддерживается отрисовка линий с градиентным переходом цветов на ней. Для этого неоходимо включить опцию `lineMetrics` у `MapDataSource`, создать объект `LineGradient`, указав список `offset` по длине линии в диапазоне 0.0 ... 1.0 и `color` hex строкой или страндартное имя цвета CSS.
+
+```swift
+let encodedRoute: String = ...
+let routeSourceID = "route"
+
+let routeSource = MapDataSource(
+    id: routeSourceID,
+    type: .encodedString(encodedRoute),
+    lineMetrics: true
+)
+
+let gradient = LineGradient(stops: [
+    LineGradientStop(offset: 0, color: "#0000FF"), 
+    LineGradientStop(offset: 0.1, color: "royalblue"),
+    LineGradientStop(offset: 0.3, color: "cyan"),
+    LineGradientStop(offset: 0.5, color: "lime"),
+    LineGradientStop(offset: 0.7, color: "yellow"),
+    LineGradientStop(offset: 1, color: "#FF0000")
+])
+
+let routeLayer = MapLayer(
+    id: "routeLineLayer",
+    sourceID: routeSourceID,
+    paint: LinePaintProperties(
+        lineColor: .iuColor(.green),
+        lineWidth: 6,
+        lineGradient: gradient
+    )
+)
+
+mapView.addSourcesAndLayers(
+    sources: [ routeSource ],
+    layers: [ routeLayer ]
+)
+```
+
 Поддерживается отрисовка кругов. Поскольку GeoJSON не поддерживает круги, они симулируются полигоном с заданным количеством сторон.
 
 ```swift

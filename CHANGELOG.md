@@ -1,6 +1,45 @@
 ## 1.0.138
 ### Изменения
 
+- Добавлена поддержка градиентов для линий
+```swift
+let encodedRoute: String = ...
+let routeSourceID = "route"
+
+let routeSource = MapDataSource(
+    id: routeSourceID,
+    type: .encodedString(encodedRoute),
+    lineMetrics: true // обязательно включить для градиента
+)
+
+let gradient = LineGradient(stops: [
+    LineGradientStop(offset: 0, color: "blue"), 
+    LineGradientStop(offset: 0.1, color: "royalblue"),
+    LineGradientStop(offset: 0.3, color: "cyan"),
+    LineGradientStop(offset: 0.5, color: "lime"),
+    LineGradientStop(offset: 0.7, color: "yellow"),
+    LineGradientStop(offset: 1, color: "red")
+]) // значения цвета - hex, либо страндартная палитра CSS
+
+let routeLayer = MapLayer(
+    id: "routeLineLayer",
+    sourceID: routeSourceID,
+    paint: LinePaintProperties(
+        lineColor: .iuColor(.green),
+        lineWidth: 6,
+        lineGradient: gradient
+    )
+)
+
+mapView.addSourcesAndLayers(
+    sources: [ routeSource ],
+    layers: [ routeLayer ]
+)
+```
+
+## 1.0.138
+### Изменения
+
 - мелкие улучшения и исправления
 
 ## 1.0.137
@@ -36,7 +75,6 @@ mapView.setLayoutVisible(false, layout: .subway)
 let sourceData = Data(...)
 
 let source = MapDataSource(id: "sourceID", type: .geoJSON(sourceData))
-mapView.addSource(source)
 
 let fillLayer = MapLayer(
     id: "fillLayer",
