@@ -182,6 +182,14 @@ mapView.setBearing(90, animated: true)
 mapView.isNorthAlwaysUp = true
 ```
 
+#### Скрытие маркера текущей локации
+
+Cвойство `isCurrentLocationHidden` позволяет скрывать маркер текущей локации, когда она определена. По умолчанию `false`.
+
+```swift
+mapView.isCurrentLocationHidden = true
+```
+
 #### Установка уровня зума
 Метод `setZoom` устанавливает зум карты, является облегченной версией метода `flyTo`.
 
