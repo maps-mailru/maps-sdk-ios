@@ -190,6 +190,14 @@ Cвойство `isCurrentLocationHidden` позволяет скрывать м
 mapView.isCurrentLocationHidden = true
 ```
 
+#### Изменение цвета маркера текущей локации
+
+- Cвойство `currentLocationTintColor` позволяет изменять цвет маркера текущей локации. Если `nil`, то используется цвет по умолчанию.
+
+```swift
+mapView.currentLocationTintColor = .purple
+```
+
 #### Установка уровня зума
 Метод `setZoom` устанавливает зум карты, является облегченной версией метода `flyTo`.
 
