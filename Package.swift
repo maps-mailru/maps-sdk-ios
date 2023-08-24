@@ -15,8 +15,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "MapsSDK",
-            url: "https://artifactory-external.vkpartner.ru/artifactory/maps-sdk-ios/1.1.34/MapsSDK.xcframework.zip",
-            checksum: "e835eec688133ccefcfb9f2dee6e1f8f7846683bcb816dc963eb21e7a2e08145"
+            url: "https://artifactory-external.vkpartner.ru/artifactory/maps-sdk-ios/1.0.151/MapsSDK.xcframework.zip",
+            checksum: "811fa9b4ace9e6fa77129bbd0ec761888bf1b09141603aa20aadd66e281a039c"
         )
     ]
 )
