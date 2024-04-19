@@ -1,3 +1,9 @@
+## 1.1.47
+## Изменения
+
+- Добавлена конфигурация `WKWebViewConfiguration.limitsNavigationsToAppBoundDomains = true` в WebView.
+
+
 ## 1.1.46
 ### Изменения
 
